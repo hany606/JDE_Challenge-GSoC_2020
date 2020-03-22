@@ -8,6 +8,7 @@
 # Sources:
 #  (1). https://stackoverflow.com/questions/50413680/matplotlib-animate-2d-array
 #  (2). https://towardsdatascience.com/animations-with-matplotlib-d96375c5442c
+#  (3). https://stackoverflow.com/questions/2084508/clear-terminal-in-python
 # -----------------------------------------------
 
 
@@ -36,6 +37,8 @@ class GameOfLife:
 
 
     def printMap(self):
+        # Source: https://stackoverflow.com/questions/2084508/clear-terminal-in-python
+        print(chr(27) + "[2J")
         print("-------------------------------------------------------")
         for i in range(self.size[0]):
             for j in range(self.size[1]):
@@ -69,10 +72,36 @@ class GameOfLife:
         for i in range(num_iterations):
             self.printMap()
             self.iteration()
+    
+    def test(self):
+        import numpy as np
+        from matplotlib import pyplot as plt
+        from matplotlib.animation import FuncAnimation
+        plt.style.use('seaborn-pastel')
+
+
+        fig = plt.figure()
+        ax = plt.axes(xlim=(0, 4), ylim=(-2, 2))
+        line, = ax.plot([], [], lw=3)
+
+        def init():
+            line.set_data([], [])
+            return line,
+        def animate(i):
+            x = np.linspace(0, 4, 1000)
+            y = np.sin(2 * np.pi * (x - 0.01 * i))
+            line.set_data(x, y)
+            return line,
+
+        anim = FuncAnimation(fig, animate, init_func=init,
+                                    frames=200, interval=20, blit=True)
+
+
+        anim.save('sine_wave.gif', writer='imagemagick')
                     
 
 if __name__ == "__main__":
-    g = GameOfLife(25)
+    g = GameOfLife((25,100))
     g.random()
-    g.printMap()
-    g.game(1000)
+    # g.game(1000)
+    g.test()
