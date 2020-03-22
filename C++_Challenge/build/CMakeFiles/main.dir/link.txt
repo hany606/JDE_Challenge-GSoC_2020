@@ -1,0 +1,1 @@
+/home/linuxbrew/.linuxbrew/bin/c++     CMakeFiles/main.dir/src/main.cpp.o CMakeFiles/main.dir/includes/Labyrinth.cpp.o  -o main 

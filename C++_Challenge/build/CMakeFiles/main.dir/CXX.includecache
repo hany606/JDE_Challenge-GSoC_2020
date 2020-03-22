@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/hany/repos/Projects/JDE_Challenge-GSoC_2020/C++_Challenge/includes/Labyrinth.cpp
+Labyrinth.h
+/home/hany/repos/Projects/JDE_Challenge-GSoC_2020/C++_Challenge/includes/Labyrinth.h
+tuple
+-
+iostream
+-
+fstream
+-
+
+/home/hany/repos/Projects/JDE_Challenge-GSoC_2020/C++_Challenge/includes/Labyrinth.h
+string
+-
+vector
+-
+tuple
+-
+
