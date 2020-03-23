@@ -26,8 +26,6 @@ class Labyrinth
 {
     public:
         Labyrinth(string,string);
-
-        vector<vector<char>> getMap();
         solution getLongestSolution();
         vector<solution> getlAllSolutions();
         void solve();

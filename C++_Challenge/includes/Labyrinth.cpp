@@ -50,6 +50,7 @@ void Labyrinth::writeFile(string file_name)
         map[final_solution.path[i].y][final_solution.path[i].x] = char(i + 1 + '0');
     }
     // Write the soltion
+    fout<<final_solution.length<<"\n";
     for(int y = 0; y < height; y++){
         for(int x = 0; x < width; x++){
             fout<<map[y][x];
@@ -60,10 +61,6 @@ void Labyrinth::writeFile(string file_name)
 
 }
 
-vector<vector<char>> Labyrinth::getMap()
-{
-
-}
 
 solution Labyrinth::getLongestSolution()
 {
@@ -79,10 +76,12 @@ solution Labyrinth::getLongestSolution()
     
 }
 
+
 vector<solution> Labyrinth::getlAllSolutions()
 {
-    
+    return solutions;
 }
+
 bool Labyrinth::visitedCell(cell c, solution sol)
 {
     for(int i = 0; i < sol.length; i++)
@@ -159,16 +158,15 @@ void Labyrinth::solve()
     };
 
     // Iterate all over the cells from the first row until find a row that has a space (Wrong for the case of the deadend of the element starting from the 1st row and for example there is another cell that start and end too far)
-    // for(int y = 0; y < height; y++){
-    //     for(int x = 0; x < width; x++){
-            // cell root = {x,y};
-            cell root = {6,0};
-            // if(!availableCell(root))
-            //     continue;
+    for(int y = 0; y < height; y++){
+        for(int x = 0; x < width; x++){
+            cell root = {x,y};
+            if(!availableCell(root))
+                continue;
             
             searchDFS(root, empty_sol);
-    //     }
-    // }
+        }
+    }
     
     writeFile(out_file_name);
 }
