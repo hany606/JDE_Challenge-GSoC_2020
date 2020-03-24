@@ -23,6 +23,9 @@ class MyAlgorithm(threading.Thread):
         self.threshold_image_lock = threading.Lock()
         self.color_image_lock = threading.Lock()
         threading.Thread.__init__(self, args=self.stop_event)
+        self.prev_error = 0
+        self.prev_time = 0
+        self.sum_error = 0
     
     def getImage(self):
         self.lock.acquire()
@@ -90,33 +93,62 @@ class MyAlgorithm(threading.Thread):
             lower_bound = (0,0,0)
             higher_bound = (150,150,150)
             mask = cv2.inRange(hsv_img, lower_bound, higher_bound)
-            # retval, thresh = cv2.threshold(gray_img, 150, 255, cv2.THRESH_BINARY) # didn't work because of the dark colors of the walls and the line
+            mask = 255 - mask
             return mask
 
         def crop_image(img):
             # as we will have PID controller, so getting out of the track and many corner cases for the cropped image that will not work, will not happen
             h, w = img.shape[:2]
-            new_img = img[h-100:h, 0:w]
-            new_img[0:5][:] = 255
-            new_img[95:100][:] = 255
+            new_img = img[h-100:h, :]
+            # print(len(new_img), len(new_img[0]))
+            new_img[0:5] = 0
+            new_img[-6:-1][:] = 0
+            new_img[-1][:] = 0
+            for i in range(100):
+                new_img[i][0:20] = 0
+                new_img[i][550:640] = 0
+            # new_img[i][-1] = 0
+            # new_img[:][0:5] = 0
+            # new_img[:][-6:-1] = 0
             return new_img
 
         def get_set_point(img):
             _, contours, _ = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            cnt = contours[len(contours)-1]
-            rect = cv2.minAreaRect(contours[len(contours)-1])
+            if(len(contours) == 0):
+                return [320,50],img
+            cnt = contours[-1]
+            rect = cv2.minAreaRect(cnt)
             box = cv2.boxPoints(rect)
             box = np.int0(box)
             M = cv2.moments(cnt)
+            if(M["m00"] == 0):
+                return [320,50],img
+
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
             set_point = (cX,cY)
-            set_point_image = cv2.circle(img, set_point, 5, (255, 255, 255), -1)
+            set_point_image = cv2.circle(img, set_point, 5, 0, -1)
             return set_point, set_point_image
 
         def control(set_point):
-            kp,ki,kd = 10,0,0
-            error = math.sqrt((320 - set_point[0])**2 + (50 - set_point[1])**2)
+            kp,ki,kd = 0.02,0.1,0.05
+            error_vector = [320 - set_point[0], 50 - set_point[1]]
+            error = math.sqrt(abs(error_vector[0]))
+            if(error_vector[0] < 0):
+                error *= -1 
+            print("error", error)
+            error = min(max(error,-10),10)
+            dt = (time.time()-self.prev_time)
+            # print("dt", dt)
+            u = kp*error + kd*(error-self.prev_error) + ki*(self.sum_error)*dt
+            error = min(max(error,-5),5)
+            self.motors.sendV(2)
+            self.motors.sendW(u)
+
+            self.prev_error = error
+            self.sum_error += error
+            self.prev_time = time.time()
+
             # self.motors.sendV(1-error)
 
 
@@ -129,11 +161,9 @@ class MyAlgorithm(threading.Thread):
         binary_image = line_detection(image)
         cropped_binary_image = crop_image(binary_image)
         set_point, set_point_image = get_set_point(cropped_binary_image)
-
+        print("set_point",set_point)
         control(set_point)
         #EXAMPLE OF HOW TO SEND INFORMATION TO THE ROBOT ACTUATORS
-        #self.motors.sendV(10)
-        #self.motors.sendW(5)
 
         #SHOW THE FILTERED IMAGE ON THE GUI
         self.set_threshold_image(set_point_image)
