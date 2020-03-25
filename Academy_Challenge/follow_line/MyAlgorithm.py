@@ -131,17 +131,24 @@ class MyAlgorithm(threading.Thread):
             return set_point, set_point_image
 
         def control(set_point):
-            kp,ki,kd = 0.02,0.1,0.05
+            kp,ki,kd = 0.04,0.08,0.002
             error_vector = [320 - set_point[0], 50 - set_point[1]]
             error = math.sqrt(abs(error_vector[0]))
             if(error_vector[0] < 0):
                 error *= -1 
             print("error", error)
             error = min(max(error,-10),10)
+            print("error+",error)
             dt = (time.time()-self.prev_time)
             # print("dt", dt)
-            u = kp*error + kd*(error-self.prev_error) + ki*(self.sum_error)*dt
-            error = min(max(error,-5),5)
+            u_P = kp*error
+            u_D = kd*(error-self.prev_error)/dt
+            u_I = ki*(self.sum_error)*dt
+            print("P: {:} \t I: {:} \t D: {:}".format(u_P, u_I, u_D))
+            u = u_P + u_I + u_D
+            print("u",u)
+            # u = min(max(u,-5),5)
+            # print("u+",u)
             self.motors.sendV(2)
             self.motors.sendW(u)
 
@@ -149,7 +156,6 @@ class MyAlgorithm(threading.Thread):
             self.sum_error += error
             self.prev_time = time.time()
 
-            # self.motors.sendV(1-error)
 
 
         #GETTING THE IMAGES
