@@ -162,7 +162,7 @@ class MyAlgorithm(threading.Thread):
         image = self.getImage()
 
         # Add your code here
-        print "Runing"
+        print("Runing")
 
         binary_image = line_detection(image)
         cropped_binary_image = crop_image(binary_image)
