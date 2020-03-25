@@ -131,18 +131,18 @@ class MyAlgorithm(threading.Thread):
             return set_point, set_point_image
 
         def control(set_point):
-            kp,ki,kd = 0.04,0.08,0.002
+            kp,ki,kd = 0.045,0.08,0.05
             error_vector = [320 - set_point[0], 50 - set_point[1]]
             error = math.sqrt(abs(error_vector[0]))
             if(error_vector[0] < 0):
                 error *= -1 
             print("error", error)
-            error = min(max(error,-10),10)
+            # error = min(max(error,-10),10)
             print("error+",error)
             dt = (time.time()-self.prev_time)
             # print("dt", dt)
             u_P = kp*error
-            u_D = kd*(error-self.prev_error)/dt
+            u_D = kd*(error-self.prev_error)
             u_I = ki*(self.sum_error)*dt
             print("P: {:} \t I: {:} \t D: {:}".format(u_P, u_I, u_D))
             u = u_P + u_I + u_D
