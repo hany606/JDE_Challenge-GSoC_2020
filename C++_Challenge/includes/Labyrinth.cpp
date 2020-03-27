@@ -1,3 +1,8 @@
+/*
+ * Author: Hany Hamed
+ * Description: This file includes the implementation of Labyrinth.h
+ * */
+
 #include "Labyrinth.h"
 #include <tuple>
 #include <iostream>
@@ -6,7 +11,13 @@
 
 using namespace std;
 
-
+/**
+ * Constructor for the Labyrinth Class
+ * Initialize the class variables (in_file_name, out_file_name, width, height of the map)
+ *
+ * @param in_file_name it is the input file name
+ * @param out_file_name it is the output file name
+ */
 Labyrinth::Labyrinth(string in_file_name, string out_file_name): 
     in_file_name(in_file_name), out_file_name(out_file_name)
 {
@@ -14,6 +25,11 @@ Labyrinth::Labyrinth(string in_file_name, string out_file_name):
     height = 0;
 }
 
+/**
+ * Read the input file and add it to the map which is 2D vector
+ *
+ * @param file_name the name of the input file
+ */
 void Labyrinth::readFile(string file_name)
 {
     ifstream fin (file_name);
@@ -35,6 +51,11 @@ void Labyrinth::readFile(string file_name)
     }
 }
 
+/**
+ * Write to the output file the result of the exercise
+ *
+ * @param file_name the name of the output file
+ */
 void Labyrinth::writeFile(string file_name)
 {
 
@@ -61,7 +82,11 @@ void Labyrinth::writeFile(string file_name)
 
 }
 
-
+/**
+ * Get the longest solution from the set of all solutions
+ *
+ * @return the longest solution
+ */
 solution Labyrinth::getLongestSolution()
 {
     int mx_index = 0;
@@ -76,12 +101,24 @@ solution Labyrinth::getLongestSolution()
     
 }
 
-
+/**
+ * Get all the solutions that has been found
+ *
+ * @return all the solutions in a vector of solution form
+ */
 vector<solution> Labyrinth::getlAllSolutions()
 {
     return solutions;
 }
 
+/**
+ * Check if the given cell is being visited or not
+ *  By checking its existence in the current solution or not
+ *
+ * @param c: cell it is the cell to be checked
+ * @param sol: solution it is the current reached solution (path)
+ * @return boolean true: visited, false: not visited
+ */
 bool Labyrinth::visitedCell(cell c, solution sol)
 {
     for(int i = 0; i < sol.length; i++)
@@ -91,6 +128,13 @@ bool Labyrinth::visitedCell(cell c, solution sol)
     return false;
 }
 
+/**
+ * Check if the current cell is available to be next cell or not
+ *  As available means it is not boarder of the map (or out of the grid)
+ *
+ * @param c: cell the cell to be checked
+ * @return boolean true: available, false: not available
+ */
 bool Labyrinth::availableCell(cell c)
 {
     if(map[c.y][c.x] == '#')
@@ -98,6 +142,14 @@ bool Labyrinth::availableCell(cell c)
     return true;
 }
 
+
+/**
+ * Get all the neighbours for the cell
+ *  By checking all the possibile movements and checking its availability (not being boarder or out of the grid)
+ *
+ * @param root: cell the cell to get all its neighbour
+ * @return vector of the neighbour cells
+ */
 vector<cell> Labyrinth::getNeighbours(cell root)
 {
     vector<cell> neighbours;
@@ -120,6 +172,14 @@ vector<cell> Labyrinth::getNeighbours(cell root)
 
 }
 
+
+/**
+ * This is the main logic of the class to search all the possible ways from root cell
+ *  By searching DFS to get the longest path in the end
+ *
+ * @param root: cell: the cell to be considered root for the search
+ * @param sol: solution: the path that it is already taken while searching  
+ */
 void Labyrinth::searchDFS(cell root, solution sol)
 {
 
@@ -149,6 +209,11 @@ void Labyrinth::searchDFS(cell root, solution sol)
 }
 
 
+/**
+ * The function to call the read the file, call all DFS search from every cell as roots
+ *  Then write the solution
+ * The function that is needed to be called from the user code
+ */
 void Labyrinth::solve()
 {
     readFile(in_file_name);

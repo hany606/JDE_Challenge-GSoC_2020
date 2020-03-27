@@ -1,3 +1,8 @@
+/*
+ * Author: Hany Hamed
+ * Description: This file includes the defitions for Labyrinth.cpp
+ * */
+
 #ifndef LABYRINTH_G
 #define LABYRINTH_G
 

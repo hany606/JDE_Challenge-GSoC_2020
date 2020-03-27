@@ -1,9 +1,8 @@
 /*
-CMakeList
-https://www.jetbrains.com/help/clion/quick-cmake-tutorial.html#
-size of the array
-https://stackoverflow.com/questions/10274162/how-to-find-2d-array-size-in-c
-*/
+ * Author: Hany Hamed
+ * Description: The main code to be run and modify the parameters of the Labyrinth
+ * */
+
 
 #include "Labyrinth.h"
 #include <iostream>
