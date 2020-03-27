@@ -1,19 +1,5 @@
 # C++ Challenge
 
-## TODO:
-
-* Adding some cmd argumants for cmd customizing
-* Write about the code functions
-* Add comment header with author and description of each file and add the references
-
-## Description
-
-* TODO
-
-## How to customize it
-
-* TODO
-
 ## How to compile and run it (These steps are mainly for linux system users)?
 
 1. Create a new folder for build & go to that directory ```mkdir -p build && cd build```
