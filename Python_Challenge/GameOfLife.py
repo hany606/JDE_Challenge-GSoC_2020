@@ -1,6 +1,6 @@
 # -----------------------------------------------
 # Author: Hany Hamed
-# Description: This code for GameOfLife class
+# Description: This code for GameOfLife class, includes the functions for the game
 # Notes:
 #   - Variables Names: using under_score_case
 #   - Functions Names: camelCase
@@ -27,10 +27,6 @@ class GameOfLife:
         self.map = None
         self.fig = plt.figure()
         self.neighbours_moves = [(0,1), (0,-1), (1,0), (1,1), (1,-1), (-1,0), (-1,1), (-1,-1)]
-
-
-    def animate(self):
-        pass
 
     def random(self):
         self.map = np.random.randint(0,2,(self.size[0],self.size[1]))
