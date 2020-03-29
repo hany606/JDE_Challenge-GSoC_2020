@@ -81,9 +81,8 @@ class GameOfLife:
 
         fig = plt.figure()
         ax = plt.axes(xlim=(0, self.size[0]), ylim=(0, self.size[1]))
-        matrix = ax.matshow(self.map)
 
-        ani = animation.FuncAnimation(fig, update, frames=1, interval=0.001)
+        ani = animation.FuncAnimation(fig, update, frames=1000, interval=200)
         plt.show()
                     
 
