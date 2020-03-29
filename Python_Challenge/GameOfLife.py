@@ -46,23 +46,27 @@ class GameOfLife:
         print("-------------------------------------------------------")
 
     def iteration(self):
-        for x in range(self.size[0]):
-            for y in range(self.size[1]):
+        copy_map = np.copy(self.map)
+        for y in range(self.size[0]):
+            for x in range(self.size[1]):
                 counter = 0
                 for m in self.neighbours_moves:
                     x_new, y_new = x+m[0], y+m[1]
-                    if(x_new < 0 or x_new >= self.size[0] or y_new < 0 or y_new >= self.size[1]):
+                    if(x_new < 0 or x_new >= self.size[1] or y_new < 0 or y_new >= self.size[0]):
                         continue
-                    counter += self.map[x_new][y_new]
+                    counter += copy_map[y_new][x_new]
                 
-                if(counter < 2 and self.map[x][y]):
-                    self.map[x][y] = 0
-                
-                elif((counter == 2 or counter == 3)):
-                    self.map[x][y] = 1
+                # Any live cell with two or three neighbors survives.
+                if((counter == 2 or counter == 3) and copy_map[y][x] == 1):
+                    self.map[y][x] = 1
 
-                elif(counter > 3):
-                    self.map[x][y] = 0
+                # Any dead cell with three live neighbors becomes a live cell.
+                elif(counter == 3 and copy_map[y][x] == 0):
+                    self.map[y][x] = 1
+                
+                # All other live cells die in the next generation. Similarly, all other dead cells stay dead.
+                else:
+                    self.map[y][x] = 0
 
     def game_cli(self, num_iterations=50):
         for i in range(num_iterations):
